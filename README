@@ -1,0 +1,93 @@
+galb1997
+ilana315061945
+
+
+------------------------------------------------------------------------------------------------------
+1. Explanation for the differences in the first to second UML diagram-
+
+   # In the first design we thought not doing a class - Leaves (In addition to 'Trunk' and 'Leaf' classes)
+    and to create the leaves inside the tree class. After we implemented in that way we recognized that
+    the function 'createInRange' in the tree class is very long and we think that it will be more clear to
+    separate the part of creating group of leaves of single tree to another class.
+    In this way the responsible of the tree class is for the whole tree, and for each part the tree contains
+    we build a class that responsible for this part.
+
+   # In addition, we thought to put the perlin noise function in Terrain class.
+     But then we understand that this function includes a lot of sub functions and we think to create for it
+     a separate class.
+     This cause to the Terrain class to be more readable.
+
+------------------------------------------------------------------------------------------------------
+2. Explanation of how we have made our world infinite-
+   To create an "infinite" world effectively we worked in a certain way for each object in the game -
+
+   # For the Avatar we placed the camera to follow it therefore throughout the game the avatar will
+     appear in the center of the screen and the camera will move with it.
+   # For the day - night objects and the counter - energy object,
+     we set them to move with the camera and thus not be left behind if the camera moves.
+   # Creating all the ground and trees with the start of the game will be inefficient.
+     Therefore we chose an initial range in which we will create this and according to the movement of the
+     camera we changed the existing range.
+     The decision whether to create or remove ground and trees depends on the windows dimensions,
+     the location of the camera (which moves with the avatar) and the range that currently exists.
+     At each time point in the game we check two conditions-
+     If the avatar moves to the right and gets close to the right border of the existing ground,
+     (before we see it on the screen) we will create more ground and trees on the right and increase the right
+     bound.
+     To reduce the amount of game objects at a given moment we will remove ground and trees on the left side.
+     We will do the same if the avatar moves to the left.
+     In addition, we want our world to be consistent. Because we remove and add the ground and trees
+     throughout the game we will want to keep the trees structure and ground height at each coordinate.
+     During the game we use randomness to create objects.
+     But if we choose the same seed for random objects they will produce exactly the same series of numbers.
+     Therefore, for each X - coordinate in the game, we sent an unique seed that depends on
+     the X - coordinate value and the initial seed of the game.
+     Thus we get that objects created in a particular X - coordinate will be created in exactly the same way
+     if they will be created again.
+
+
+------------------------------------------------------------------------------------------------------
+3. Explanation of the way we chose to implement the trees package, and why-
+   The 'trees' package should contain all the classes related to the creation of the trees in the game.
+   In order to divide the code into small parts with a specific area of responsibility we created a class
+   for each part in the tree-
+   # The trunk class is responsible for creating the tree trunk from game blocks.
+   # A leaf class that is responsible for creating a single leaf with all the features and transitions
+     required in the exercise.
+   # Leaves class that creates a set of leaves for a specific tree.
+
+   Eventually we create Tree class which responsible for the creation and management the trees.
+   The creation of the trees is done by assembling all the game objects we have presented, therefore there is
+   a separate class for this.
+
+------------------------------------------------------------------------------------------------------
+4. Explanation about dilemmas or design decisions during the work-
+
+   # At start we thought to create the leaf in the same strategy of the other game objects (By calling to
+    static create function). Then we understood that we want to change the leaf behavior when it collision in
+    other objects. We thought that the best way to do it is to override the onCollision function
+    and therefore we decide the leaf will inherit from gameObject class.
+
+   # We had a dilemma if the Leaf should extends the Block class or the GameObject class.
+     But we saw that although they (Leaf and Block) have common features (like size) they also have
+     some different features (like mass).
+     We thought that it is more correct to think leaf 'is a' gameObject rather than leaf 'is a' Block,
+     and we decide that leaf extends the game object.
+
+------------------------------------------------------------------------------------------------------
+5. Explanation about the bonus-
+   We chose adding to the game an energy counter that shows on the screen the amount of energy the bear has
+   at any given moment in the game.
+   To implement this, we created a new class in the 'world' package that extends the Game Object class.
+   This class represents a Game Object that is an energy counter.
+   This class defines the properties of this game object and also responsible for updating the current energy
+   on the screen.
+   The current amount of energy is a characteristic of the avatar object. Since we could not change the exist
+   Avatar API and sent to it the Counter Object we thought of an alternative way -
+   We have permit to add for the Avatar Class methods so we added few getters for the relevant information.
+   Then we changed the numeric value in the game manager's update function using this getters.
+------------------------------------------------------------------------------------------------------
+
+
+
+
